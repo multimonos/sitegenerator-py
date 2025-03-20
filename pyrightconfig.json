@@ -1,4 +1,5 @@
 {
   "venvPath": "./",
-  "reportImplicitOverride": false
+  "reportImplicitOverride": false,
+  "reportUnusedCallResult": false
 }
