@@ -1,7 +1,11 @@
 from enum import Enum
+from threading import ExceptHookArgs
+
+from leafnode import LeafNode
 
 
 class TextType(Enum):
+    TEXT = "text"
     NORMAL = "normal"
     ITALIC = "italic"
     BOLD = "bold"
@@ -28,3 +32,23 @@ class TextNode:
 
     def __repr__(self):
         return f"{type(self).__name__}({self.text}, {self.text_type}, {self.url})"
+
+
+def text_node_to_html_node(node: TextNode):
+    match node.text_type:
+        case TextType.TEXT:
+            return LeafNode(None, node.text, [])
+        case TextType.BOLD:
+            return LeafNode("b", node.text, [])
+        case TextType.ITALIC:
+            return LeafNode("i", node.text, [])
+        case TextType.CODE:
+            return LeafNode("code", node.text, [])
+        case TextType.LINK:
+            url = "" if node.url is None else node.url
+            return LeafNode("a", node.text, [], {"href": url})
+        case TextType.IMAGE:
+            url = "" if node.url is None else node.url
+            return LeafNode("img", "", [], {"src": url, "alt": node.text})
+        case _:
+            raise Exception("unknown text type")
