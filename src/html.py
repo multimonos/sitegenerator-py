@@ -26,12 +26,12 @@ def create_block_htmlnode(block_type: BlockType, children: list[HTMLNode]):
             return None
 
 
-def code_node_from_block(block: str):
+def code_node_from_block(block: str) -> HTMLNode:
     codestr = block.replace("```", "").lstrip()
     return ParentNode("pre", [LeafNode("code", codestr)])
 
 
-def markdown_to_html_node(doc: str):
+def markdown_to_html_node(doc: str) -> HTMLNode:
     # convert to blocks
     blocks: list[str] = markdown_to_blocks(doc)
     nodes: list[HTMLNode] = []

@@ -2,11 +2,7 @@ import os
 import shutil
 from pathlib import Path
 
-
-def main():
-    clean("./public")
-    deploy_static_assets("./static", "./public")
-    build()
+from page import generate_page
 
 
 def force_copy(src: str, dst: str) -> None:
@@ -61,16 +57,23 @@ def deploy_static_assets(src: str, dst: str):
     force_copy(src, dst)
     print("done")
 
-    print("\nValidating...")
-    print(f"\nsource:")
-    tree(src)
+
+def list_files(dst: str) -> None:
     print(f"\ntarget:")
     tree(dst)
     print("done")
 
 
 def build():
-    pass
+    print("\nGenerating pages...")
+    generate_page("./content/index.md", "./template.html", "./public/index.html")
+
+
+def main():
+    clean("./public")
+    deploy_static_assets("./static", "./public")
+    build()
+    list_files("./public")
 
 
 if __name__ == "__main__":
