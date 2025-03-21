@@ -64,11 +64,14 @@ class TestParsing(unittest.TestCase):
         self.assertEqual(len(matches), 0)
 
     def test_extract_markdown_image_only(self):
-        text = "This is text with a ![first is image](https://i.imgur.com/aKaOqIh.gif) and [second is link](https://.example.com/peg)"
+        text = "This is text with a ![first is image](https://i.imgur.com/aKaOqIh.gif) and [second is link](https://.example.com)"
         matches = extract_markdown_images(text)
         self.assertEqual(len(matches), 1)
 
     def test_extract_markdown_link_only(self):
-        text = "This is text with a ![first is image](https://i.imgur.com/aKaOqIh.gif) and [second is link](https://.example.com/peg)"
+        text = "This is text with a ![first is image](https://i.imgur.com/aKaOqIh.gif) and [second is link](https://.example.com)"
         matches = extract_markdown_links(text)
         self.assertEqual(len(matches), 1)
+
+    if __name__ == "__main__":
+        unittest.main()
