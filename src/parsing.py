@@ -14,13 +14,13 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
 
 
 def split_nodes_delimiter(
-    old_nodes: list[object], delimiter: str, text_type: TextType
-) -> list[object]:
-    new_nodes: list[object] = []
+    old_nodes: list[TextNode], delimiter: str, text_type: TextType
+) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
 
     for i in range(0, len(old_nodes)):
         node = old_nodes[i]
-        if isinstance(node, TextNode) and delimiter in node.text:
+        if delimiter in node.text:
             texts = node.text.split(delimiter)
 
             textnodes = [
@@ -41,13 +41,13 @@ def contains_image_or_link(text: str) -> bool:
     return "](" in text
 
 
-def split_nodes_image(old_nodes: list[object]) -> list[object]:
-    new_nodes: list[object] = []
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
 
     for i in range(0, len(old_nodes)):
         node = old_nodes[i]
 
-        if isinstance(node, TextNode) and contains_image_or_link(node.text):
+        if contains_image_or_link(node.text):
             split = re.split(r"(!\[.+?\))", node.text)
             for line in split:
                 if line == "":
@@ -63,13 +63,13 @@ def split_nodes_image(old_nodes: list[object]) -> list[object]:
     return new_nodes
 
 
-def split_nodes_link(old_nodes: list[object]) -> list[object]:
-    new_nodes: list[object] = []
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
 
     for i in range(0, len(old_nodes)):
         node = old_nodes[i]
 
-        if isinstance(node, TextNode) and contains_image_or_link(node.text):
+        if contains_image_or_link(node.text):
             split = re.split(r"((?<!\!)\[.+?\))", node.text)
 
             for line in split:
