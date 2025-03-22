@@ -1,5 +1,4 @@
 from enum import Enum
-from threading import ExceptHookArgs
 
 from htmlnode import HTMLNode
 from leafnode import LeafNode
