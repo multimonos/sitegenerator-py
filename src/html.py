@@ -23,7 +23,8 @@ def heading_from_block(block: str) -> ParentNode:
 def paragraph_from_block(block: str) -> ParentNode:
     textnodes = text_to_textnodes(block)
     leaves = list(map(text_node_to_html_node, textnodes))
-    return ParentNode("p", leaves)
+    parent = ParentNode("p", leaves)
+    return parent
 
 
 def code_from_block(block: str) -> ParentNode:
