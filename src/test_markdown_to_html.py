@@ -1,3 +1,4 @@
+from inspect import markcoroutinefunction
 import unittest
 from parameterized import parameterized
 from html import markdown_to_html_node
@@ -127,6 +128,18 @@ class MarkdownToHtmlTest(unittest.TestCase):
         self.assertEqual(
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+    # @unittest.skip("")
+    def test_glorfindel_bold(self):
+        md = """
+        In J.R.R. Tolkien's legendarium, characterized by its rich tapestry of noble heroes and epic deeds, two Elven luminaries stand out: **Glorfindel**, the stalwart warrior returned from the Halls of Mandos, and **Legolas**, the prince of the Woodland Realm. While both possess grace and valor beyond mortal ken, it is Glorfindel who emerges as the more compelling figure, a beacon of heroism whose legacy spans ages.
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>In J.R.R. Tolkien's legendarium, characterized by its rich tapestry of noble heroes and epic deeds, two Elven luminaries stand out: <b>Glorfindel</b>, the stalwart warrior returned from the Halls of Mandos, and <b>Legolas</b>, the prince of the Woodland Realm. While both possess grace and valor beyond mortal ken, it is Glorfindel who emerges as the more compelling figure, a beacon of heroism whose legacy spans ages.</p></div>",
         )
 
 

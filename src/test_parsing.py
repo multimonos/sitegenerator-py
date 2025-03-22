@@ -37,6 +37,20 @@ class TestParsing(unittest.TestCase):
         self.assertEqual(new_nodes[1].text_type, TextType.BOLD)
         self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
 
+    def test_split_multiple(self):
+        n = TextNode(
+            "This is the **first** instance and this is **second** instance and the **last**",
+            TextType.TEXT,
+        )
+        nodes = split_nodes_delimiter([n], "**", TextType.BOLD)
+        self.assertEqual(len(nodes), 6)
+        self.assertEqual(nodes[0].text, "This is the ")
+        self.assertEqual(nodes[1].text, "first")
+        self.assertEqual(nodes[2].text, " instance and this is ")
+        self.assertEqual(nodes[3].text, "second")
+        self.assertEqual(nodes[4].text, " instance and the ")
+        self.assertEqual(nodes[5].text, "last")
+
     def test_extract_markdown_images_one(self):
         matches = extract_markdown_images(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
