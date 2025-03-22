@@ -53,11 +53,17 @@ def ordered_list_from_block(block: str) -> ParentNode:
 
 
 def blockquote_from_block(block: str) -> ParentNode:
-    lines = [x.strip() for x in re.split(r"\>\s", block.strip()) if x != ""]
-    textnodes = list(map(text_to_textnodes, lines))
-    children = [list(map(text_node_to_html_node, nodes)) for nodes in textnodes]
-    paragraphs: list[HTMLNode] = [ParentNode("p", nodes) for nodes in children]
-    parent = ParentNode("blockquote", paragraphs)
+    if False:
+        lines = [x.strip() for x in re.split(r"\>\s", block.strip()) if x != ""]
+        textnodes = list(map(text_to_textnodes, lines))
+        children = [list(map(text_node_to_html_node, nodes)) for nodes in textnodes]
+        paragraphs: list[HTMLNode] = [ParentNode("p", nodes) for nodes in children]
+        parent = ParentNode("blockquote", paragraphs)
+    else:
+        lines = [x.strip() for x in re.split(r"\>\s", block.strip()) if x != ""]
+        textnodes = text_to_textnodes("\n".join(lines))
+        children = list(map(text_node_to_html_node, textnodes))
+        parent = ParentNode("blockquote", children)
     return parent
 
 
