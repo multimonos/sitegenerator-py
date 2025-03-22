@@ -16,29 +16,29 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
 def split_nodes_delimiter(
     old_nodes: list[TextNode], delimiter: str, text_type: TextType
 ) -> list[TextNode]:
+    """if delimiter is found then replace the captured node with a node of type TextType"""
+
     new_nodes: list[TextNode] = []
 
-    for i in range(0, len(old_nodes)):
-        node = old_nodes[i]
-        if delimiter in node.text:
-            texts = node.text.split(delimiter)
+    # this only loops once becasue the "old_nodes" always has length 1 for a block
+    # so, if the delimiter exists more than 1 time we cannot catch it
 
-            textnodes = [
-                TextNode(texts[0], node.text_type, node.url),
-                TextNode(texts[1], text_type, node.url),
-                TextNode(texts[2], node.text_type, node.url),
-            ]
+    needle = re.compile("(" + re.escape(delimiter) + ".+?" + re.escape(delimiter) + ")")
 
-            # replace item at i with the items in textnodes
-            new_nodes.extend(textnodes)
-        else:
+    for node in old_nodes:
+        if delimiter not in node.text:
             new_nodes.append(node)
 
+        else:
+            tokens = [x for x in re.split(needle, node.text) if x != ""]
+            for tok in tokens:
+                if delimiter in tok:
+                    value = tok.replace(delimiter, "")
+                    new_nodes.append(TextNode(value, text_type, node.url))
+                else:
+                    new_nodes.append(TextNode(tok, node.text_type, node.url))
+
     return new_nodes
-
-
-def contains_image_or_link(text: str) -> bool:
-    return "](" in text
 
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
@@ -47,7 +47,7 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     for i in range(0, len(old_nodes)):
         node = old_nodes[i]
 
-        if contains_image_or_link(node.text):
+        if "](" in node.text:
             split = re.split(r"(!\[.+?\))", node.text)
             for line in split:
                 if line == "":
@@ -69,7 +69,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     for i in range(0, len(old_nodes)):
         node = old_nodes[i]
 
-        if contains_image_or_link(node.text):
+        if "](" in node.text:
             split = re.split(r"((?<!\!)\[.+?\))", node.text)
 
             for line in split:
