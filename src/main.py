@@ -1,3 +1,4 @@
+from ntpath import isfile
 import os
 import shutil
 from pathlib import Path
@@ -6,9 +7,11 @@ from page import generate_page
 
 
 def force_copy(src: str, dst: str) -> None:
+    excluded = [".DS_Store"]
+
     if os.path.isfile(src):
-        print(f"f {src} -> {dst}")
-        shutil.copy(src, dst)
+        if os.path.basename(dst) not in excluded:
+            shutil.copy(src, dst)
         return
 
     if os.path.isdir(src):
@@ -49,7 +52,10 @@ def clean(path: str):
 def tree(dir: str):
     path = Path(dir)
     for file in path.rglob("*"):
-        print(file)
+        if path.is_file():
+            print(f"f {file}")
+        else:
+            print(f"d {file}")
 
 
 def deploy_static_assets(src: str, dst: str):
@@ -58,9 +64,17 @@ def deploy_static_assets(src: str, dst: str):
     print("done")
 
 
-def list_files(dst: str) -> None:
-    print(f"\ntarget:")
-    tree(dst)
+def list_files(dir: str) -> None:
+    print(f"\nListing files in {dir}...")
+
+    path = Path(dir)
+    for file in path.rglob("*"):
+        filepath = f"{path.resolve()}/{file}"
+        if os.path.isfile(file.resolve()):
+            print(f"f {file}")
+        else:
+            print(f"d {file}")
+
     print("done")
 
 
