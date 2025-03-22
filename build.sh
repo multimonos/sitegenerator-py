@@ -2,3 +2,4 @@
 
 clear
 python src/main.py
+cat ./public/index.html | tidy -i
