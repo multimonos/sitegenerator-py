@@ -2,4 +2,4 @@
 
 clear
 python src/main.py
-cat ./public/index.html | tidy -i
+cat ./public/index.html | tidy -i -w 120
