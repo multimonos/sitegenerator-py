@@ -6,8 +6,7 @@ from htmlnode import HTMLNode
 from leafnode import LeafNode
 from parentnode import ParentNode
 from textnode import text_node_to_html_node
-
-RENDER_BLOCKQUOTE_WITH_INNER_HTML = True
+from constants import RENDER_BLOCKQUOTE_WITH_INNER_HTML
 
 
 def heading_from_block(block: str) -> ParentNode:

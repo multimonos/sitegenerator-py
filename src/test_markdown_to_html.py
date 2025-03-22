@@ -2,6 +2,8 @@ import unittest
 from parameterized import parameterized
 from html import markdown_to_html_node
 
+from constants import RENDER_BLOCKQUOTE_WITH_INNER_HTML
+
 
 class MarkdownToHtmlTest(unittest.TestCase):
     @parameterized.expand(
@@ -29,10 +31,16 @@ class MarkdownToHtmlTest(unittest.TestCase):
         """
         node = markdown_to_html_node(md)
         html = node.to_html()
-        self.assertEqual(
-            html,
-            '<div><blockquote><p>"I am in fact a <b>Hobbit</b> in all but size."</p><p>-- J.R.R. Tolkien</p></blockquote></div>',
-        )
+        if RENDER_BLOCKQUOTE_WITH_INNER_HTML:
+            self.assertEqual(
+                html,
+                '<div><blockquote><p>"I am in fact a <b>Hobbit</b> in all but size."</p><p>-- J.R.R. Tolkien</p></blockquote></div>',
+            )
+        else:
+            self.assertEqual(
+                html,
+                '<div><blockquote>"I am in fact a <b>Hobbit</b> in all but size."\n-- J.R.R. Tolkien</blockquote></div>',
+            )
 
     # @unittest.skip("")
     def test_ol(self):
