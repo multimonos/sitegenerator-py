@@ -1,8 +1,9 @@
 import os
 import shutil
 from pathlib import Path
-
-from page import generate_page
+from colorama import Style, Fore
+from page import generate_page, generate_pages_recursive
+from format import fmt_filename, fmt_dirname, fmt_title
 
 
 def force_copy(src: str, dst: str) -> None:
@@ -14,7 +15,7 @@ def force_copy(src: str, dst: str) -> None:
         return
 
     if os.path.isdir(src):
-        print(f"d {src} -> {dst}")
+        print(fmt_dirname(f"{src} -> {dst}"))
 
         if not os.path.isdir(dst):
             os.mkdir(dst)
@@ -30,7 +31,7 @@ def force_copy(src: str, dst: str) -> None:
 
 
 def clean(path: str):
-    print(f"\nCleaning...")
+    print(fmt_title("Cleaning..."))
 
     if os.path.exists(path):
         print(f"  found {path}")
@@ -45,28 +46,24 @@ def clean(path: str):
     else:
         print(f"  {path} not found ... nothing todo")
 
-    print("done")
-
 
 def deploy_static_assets(src: str, dst: str):
-    print("\nDeploying assets...")
+    print(fmt_title("Deploying assets..."))
     force_copy(src, dst)
-    print("done")
 
 
 def list_files(dir: str) -> None:
-    print(f"\nListing files in {dir}...")
+    print(fmt_title(f"Listing files in {dir}..."))
 
     path = Path(dir)
     for file in path.rglob("*"):
         if os.path.isfile(file.resolve()):
-            print(f"f {file}")
+            print(fmt_filename(file))
         else:
-            print(f"d {file}")
-
-    print("done")
+            print(fmt_dirname(file))
 
 
-def build():
-    print("\nGenerating pages...")
-    generate_page("./content/index.md", "./template.html", "./public/index.html")
+def build(src: str, dst: str, template_path: str) -> None:
+    print(fmt_title("Generating pages..."))
+    # generate_page("./content/index.md", "./template.html", "./public/index.html")
+    generate_pages_recursive(src, template_path, dst)

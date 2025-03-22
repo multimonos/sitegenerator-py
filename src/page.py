@@ -1,8 +1,9 @@
-from ntpath import isfile
 import re
 import os
+from colorama import Style, Fore
 
 from html import markdown_to_html_node
+from format import fmt_dirname, fmt_filename, fmt_info, fmt_warn
 from markdown import extract_title
 
 
@@ -17,8 +18,6 @@ def generate_page(src: str, tplpath: str, dst: str) -> None:
 
     if not os.path.isfile(tplpath):
         raise FileNotFoundError("page template not found: {tplpath}")
-
-    print(f"{tplpath} | {src} -> {dst}")
 
     with open(src, "r", encoding="latin1") as f:
         markdown = f.read()
@@ -36,3 +35,30 @@ def generate_page(src: str, tplpath: str, dst: str) -> None:
 
     with open(dst, "w+") as f:
         f.write(html)
+
+
+def generate_pages_recursive(src: str, tplpath: str, dst: str) -> None:
+    if os.path.isfile(src):
+        _, ext = os.path.splitext(src)
+
+        if ext == ".md":
+            target = dst.replace(".md", ".html")
+            print(fmt_filename(f"{src} -> {target}") + fmt_info(f" <> {tplpath}"))
+            generate_page(src, tplpath, target)
+        else:
+            print(fmt_filename(src) + fmt_warn(" ... skipped "))
+        return
+
+    if os.path.isdir(src):
+        print(fmt_dirname(f"{src} -> {dst}"))
+
+        if not os.path.isdir(dst):
+            os.mkdir(dst)
+
+        files = os.listdir(src)
+
+        for file in files:
+            source = f"{src}/{file}"
+            target = f"{dst}/{file}"
+            generate_pages_recursive(source, tplpath, target)
+    return
