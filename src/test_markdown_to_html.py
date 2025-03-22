@@ -1,9 +1,39 @@
 import unittest
-
+from parameterized import parameterized
 from html import markdown_to_html_node
 
 
 class MarkdownToHtmlTest(unittest.TestCase):
+    @parameterized.expand(
+        [
+            (1),
+            (2),
+            (3),
+            (4),
+            (5),
+            (6),
+        ]
+    )
+    def test_headings(self, n: int):
+        prefix = "#" * n
+        md = f"\n\n\n{prefix} level {n} **lorem** ipsum\n\n"
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, f"<div><h{n}>level {n} <b>lorem</b> ipsum</h{n}></div>")
+
+    def test_blockquote(self):
+        md = """
+> "I am in fact a **Hobbit** in all but size."
+>
+> -- J.R.R. Tolkien
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            '<div><blockquote><p>"I am in fact a <b>Hobbit</b> in all but size."</p><p>-- J.R.R. Tolkien</p></blockquote></div>',
+        )
+
     # @unittest.skip("")
     def test_ol(self):
         md = """
