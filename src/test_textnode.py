@@ -65,7 +65,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.value, "")
         self.assertEqual(
             html_node.to_html(),
-            '<img src="https://example.com/foo.png" alt="lorem ipsum"></img>',
+            '<img src="https://example.com/foo.png" alt="lorem ipsum" />',
         )
 
 

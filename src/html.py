@@ -7,6 +7,8 @@ from leafnode import LeafNode
 from parentnode import ParentNode
 from textnode import text_node_to_html_node
 
+RENDER_BLOCKQUOTE_WITH_INNER_HTML = True
+
 
 def heading_from_block(block: str) -> ParentNode:
     matches: list[str] = re.findall(r"^(#+)\s", block.strip())
@@ -53,7 +55,7 @@ def ordered_list_from_block(block: str) -> ParentNode:
 
 
 def blockquote_from_block(block: str) -> ParentNode:
-    if False:
+    if RENDER_BLOCKQUOTE_WITH_INNER_HTML:
         lines = [x.strip() for x in re.split(r"\>\s", block.strip()) if x != ""]
         textnodes = list(map(text_to_textnodes, lines))
         children = [list(map(text_node_to_html_node, nodes)) for nodes in textnodes]
