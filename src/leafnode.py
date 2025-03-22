@@ -9,8 +9,10 @@ class LeafNode(HTMLNode):
         value: str | None = None,
         children: list["HTMLNode"] | None = None,
         props: dict[str, str | int] | None = None,
+        is_open_tag: bool = True,
     ) -> None:
         super().__init__(tag, value, None, props)
+        self.is_open_tag: bool = is_open_tag
 
     @override
     def to_html(self) -> str:
@@ -22,4 +24,7 @@ class LeafNode(HTMLNode):
 
         props = "" if self.props is None else " " + self.props_to_html()
 
-        return f"<{self.tag}{props}>{self.value}</{self.tag}>"
+        if self.is_open_tag:
+            return f"<{self.tag}{props}>{self.value}</{self.tag}>"
+        else:
+            return f"<{self.tag}{props} />"

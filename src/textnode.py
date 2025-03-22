@@ -49,6 +49,8 @@ def text_node_to_html_node(node: TextNode) -> HTMLNode:
             return LeafNode("a", node.text, [], {"href": url})
         case TextType.IMAGE:
             url = "" if node.url is None else node.url
-            return LeafNode("img", "", [], {"src": url, "alt": node.text})
+            return LeafNode(
+                "img", "", [], {"src": url, "alt": node.text}, is_open_tag=False
+            )
         case _:
             raise Exception("unknown text type")
